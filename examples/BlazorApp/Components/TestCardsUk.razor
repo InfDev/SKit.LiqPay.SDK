@@ -1,0 +1,59 @@
+﻿@using BootstrapBlazor
+@using BootstrapBlazor.Components
+@inject IJSRuntime JSRuntime
+
+<div>
+    <Select Color="Color.Primary" Items="Items"
+            TValue="string" DisplayText="Картки для тестування" ShowLabel="false"
+            OnSelectedItemChanged="OnSelectedItemChanged" />
+</div>
+
+@code {
+    public class LiqPayTestCard
+    {
+        public LiqPayTestCard(string number, string description)
+        {
+            Number = number;
+            Description = description;
+        }
+
+        public string Number { get; set; }
+        public string Description { get; set; }
+
+        public string Display => $"{Number} ⇒ {Description}";
+    }
+
+    public static List<LiqPayTestCard> Cards = new List<LiqPayTestCard>
+    {
+        new LiqPayTestCard("4242424242424242","Успішна оплата ⇓ картки"),
+        new LiqPayTestCard("4000000000003063","Успішна оплата з 3DS"),
+        new LiqPayTestCard("4000000000003089", "Успішна оплата з OTP"),
+        new LiqPayTestCard("4000000000003055", "Успішна оплата з CVV"),
+        new LiqPayTestCard("4000000000000002", "Не успішна оплата. Код помилки - limit"),
+        new LiqPayTestCard("4000000000009995", "Не успішна оплата. Код помилки - 9859"),
+        new LiqPayTestCard("sandbox_token", "Успішна оплата по токені"),
+    };
+
+    public static List<SelectedItem> Items =>
+        Cards.Select(i => new SelectedItem(i.Number, i.Display)).ToList();
+
+    public TestCardsUk()
+    {
+        CurrentCard = Cards[0].Number;
+    }
+
+    public string CurrentCard { get; private set; }
+
+    private Task OnSelectedItemChanged(SelectedItem item)
+    {
+        CurrentCard = item.Value;
+        // Save current card number to clipboard
+        JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", CurrentCard);
+        return Task.CompletedTask;
+    }
+
+    //protected override async Task OnInitializedAsync()
+        //{
+    //}
+
+}

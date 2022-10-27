@@ -1,0 +1,62 @@
+# https://docs.github.com/en/actions/using-workflows
+# https://www.jamescroft.co.uk/how-to-build-publish-nuget-packages-with-github-actions/
+name: .NET CI/CD
+
+on: 
+  push:
+    branches:
+    - main
+#  pull_request:
+#    branches:
+#    - main
+#   create:
+#     branches: 
+#     - release/**
+
+env:
+  DOTNET_VERSION: '6.x.x'
+  GITHUB_PACKAGE_REGISTRY_URL: https://nuget.pkg.github.com/infdev/index.json 
+  NUGETORG_PACKAGE_REGISTRY_URL: https://api.nuget.org/v3/index.json 
+  BUILD_CONFIGURATION: 'Release'
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest # windows-latest
+    defaults:
+      run:
+        shell: bash
+        
+    steps:
+    
+    - name: Checks-out your repository under $GITHUB_WORKSPACE, so your workflow can access it
+      uses: actions/checkout@v3
+      
+    - name: Setup a .NET CLI environment for use in actions
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: {{DOTNET_VERSION}}
+    
+    - name: Install NuGet client
+      uses: nuget/setup-nuget@v1
+      #with:
+      #  nuget-api-key: ${{ secrets.NUGET_KEY }}
+      #  nuget-version: '6.x'
+    
+    - name: Restore nuget packages
+      run: nuget restore SKit.LiqPay.SDK.sln
+      
+    - name: Build solution
+      run: dotnet build SKit.LiqPay.SDK.sln --configuration {{BUILD_CONFIGURATION}} --no-restore
+      
+    - name: Run tests  
+      run: dotnet test test/SKit.LiqPay.SDK.Tests/SKit.LiqPay.SDK.Tests.csproj /p:Configuration=$env:BUILD_CONFIGURATION --no-restore --no-build --verbosity normal
+    
+    - name: Add private GitHub registry
+      run: nuget source Add -Name "github" -Source https://nuget.pkg.github.com/infdev/index.json -UserName infdev -Password ${{secrets.GITHUB_TOKEN}}
+    
+    - name: Publish Nuget
+      run: dotnet nuget push src/SKit.LiqPay.SDK/bin/Release/*.nupkg --source "github" --skip-duplicate
+
+    - name: Publish SourceLink SNuget
+      run: dotnet nuget push LiqPaySDK/LiqPay.SDK/bin/Release/*.snupkg --source "github" --skip-duplicate

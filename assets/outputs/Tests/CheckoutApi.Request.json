@@ -1,0 +1,1 @@
+{"action":"pay","amount":13,"currency":"UAH","description":"Product 6175","order_id":"2dfbb7d8-2021-4a32-af58-edc7f0e23df6","language":"uk","card":"4242424242424242","card_cvv":"123","card_exp_month":"12","card_exp_year":"32","version":3,"public_key":"sandbox_i21602756917","server_url":"http://infdev.pp.ua:5195/payments/liqpay/ipn"}

@@ -1,0 +1,347 @@
+﻿@page "/checkout"
+@using System.Text.Json
+@using System.Collections.Concurrent
+@using BootstrapBlazor.Components
+@using BlazorApp.Services
+@inject CheckoutStateService CheckoutState
+@inject ConsoleService ConsoleService
+@inject OrderManager OrderManager
+@inject ILiqPayCheckoutButtonService LiqPayCheckoutClientService
+@inject ILiqPayService LiqPayService
+@inject LiqPayCallbackOptions LiqPayCallbackOptions
+@inject IJSRuntime JSRuntime
+
+<h3>@pageTitle</h3>
+
+@if (currentOrder == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <Tab IsBorderCard="true" OnClickTab="OnClickTab">
+        <TabItem Text="English" IsActive='CheckoutState.Language == "en"'>
+            <CheckoutOrder />
+
+            <div class="container mt-3">
+                @if (currentOrder?.PaymentStatus != PaymentStatus.Paid)
+                {
+                    <div class="row">
+                        <div class="col-8 text-center">
+                            <strong>Payment via personal page on LiqPay</strong>
+                        </div>
+                        <div class="col-4"><strong>Via API</strong></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <Button Color="Color.Primary" Icon="fa-solid fa-diagram-predecessor"
+                            Text="Get a POST-form «Pay»" OnClick="GenerateCheckoutButtonForm"></Button>
+                        </div>
+                        <div class="col">
+                            <Button Color="Color.Primary" Icon="fa-solid fa-link"
+                            Text="Get the «Pay» hyperlink" OnClick="GenerateCheckoutHyperlink"></Button>
+                        </div>
+                        <div class="col">
+                            <Button Color="Color.Primary" Icon="fa-solid fa-play" Text="Pay" OnClick="ServerServerCheckout"></Button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            @((MarkupString)formHtmlEn!)
+                        </div>
+                        <div class="col">
+                            @((MarkupString)linkHtmlEn!)
+                        </div>
+                        <div class="col">
+                        </div>
+                    </div>
+                    @if (formHtmlEn != null || linkHtmlEn != null)
+                    {
+                        <div class="row">
+                            <div class="col">You will be redirected to the LiqPay website to complete the payment.</div>
+                        </div>
+                    }
+                }
+
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <TestCardSelect Language="en" />
+                    </div>
+                    <div class="col-1">
+                        <Button Text="" Icon="fa-solid fa-copy" TooltipText="Copy card number to the clipboard"
+                            OnClick="CardNumberToClipboard" TooltipPlacement="Placement.Top" TooltipTrigger="hover" />
+                    </div>
+                    <div class="col-5">
+                        <div class="d-grid gap-2">
+                            <Button Color="Color.Primary" Icon="fa-solid fa-comments-dollar"
+                                Text="Getting payment state" OnClick="GetPaymentState"></Button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </TabItem>
+        <TabItem Text="Українська" IsActive='CheckoutState.Language != "en"'>
+            <CheckoutOrderUk />
+
+            <div class="container mt-3">
+                @if (currentOrder?.PaymentStatus != PaymentStatus.Paid)
+                {
+                    <div class="row">
+                        <div class="col-8 text-center">
+                            <strong>Оплата через персональну сторінку на LiqPay</strong>
+                        </div>
+                        <div class="col-4"><strong>Через API</strong></div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <Button Color="Color.Primary" Icon="fa-solid fa-diagram-predecessor"
+                            Text="Отримати POST-форму «Сплатити»" OnClick="GenerateCheckoutButtonForm"></Button>
+                        </div>
+                        <div class="col">
+                            <Button Color="Color.Primary" Icon="fa-solid fa-link"
+                            Text="Отримати гіперпосилання «Cплатити»" OnClick="GenerateCheckoutHyperlink"></Button>
+                        </div>
+                        <div class="col">
+                            <Button Color="Color.Primary" Icon="fa-solid fa-play" Text="Cплатити" OnClick="ServerServerCheckout"></Button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            @((MarkupString)formHtmlUk!)
+                        </div>
+                        <div class="col">
+                            @((MarkupString)linkHtmlUk!)
+                        </div>
+                        <div class="col">
+                        </div>
+                    </div>
+                    @if (formHtmlUk != null || linkHtmlUk != null)
+                    {
+                        <div class="row">
+                            <div class="col">Ви будете перенаправлені на сайт LiqPay для завершення замовлення.</div>
+                        </div>
+                    }
+                }
+
+                <div class="row mt-3">
+                    <div class="col-6">
+                        <TestCardSelect Language="uk" />
+                    </div>
+                    <div class="col-1">
+                        <Button Text="" Icon="fa-solid fa-copy" TooltipText="Копіювати номер картки в буфер обміну"
+                            OnClick="CardNumberToClipboard" TooltipPlacement="Placement.Top" TooltipTrigger="hover" />
+                    </div>
+                    <div class="col-5">
+                        <div class="d-grid gap-2">
+                            <Button Color="Color.Primary" Icon="fa-solid fa-comments-dollar"
+                                Text="Отримання стану платежу" OnClick="GetPaymentState"></Button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </TabItem>
+    </Tab>
+
+    <div class="container mt-1" style="padding: 0">
+        <div class="row">
+            <div class="col-12">
+                <Console Items="@ConsoleService.Messages" Height="340"
+                     IsAutoScroll="true" OnClear="ConsoleService.OnConsoleClearHandler" ShowAutoScroll="true" />
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private string pageTitle => (CheckoutState.Language == "en" ? "Payment via LiqPay" : "Оплата через LiqPay");
+    private Order? currentOrder => OrderManager.CurrentOrder;
+    private string OrderId {
+        get => currentOrder!.OrderId.ToString();
+        set => currentOrder!.OrderId = int.Parse(value);
+    }
+    private int lastOrderId;
+
+    private string? formHtmlEn { get; set; }
+    private string? formHtmlUk { get; set; }
+    private string? linkHtmlEn { get; set; }
+    private string? linkHtmlUk { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (currentOrder == null)
+        {
+            OrderManager.CurrentOrder = await OrderManager.GetLastOrder();
+            if (currentOrder == null)
+                OrderManager.CurrentOrder = await OrderManager.CreateNewOrder();
+        }
+        lastOrderId = currentOrder!.OrderId;
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            OrderManager.OnChange += OnOrderChangeHandler;
+            CheckoutState.OnChange += OnCheckoutStateChangeHandler;
+        }
+        await Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        CheckoutState.OnChange -= OnCheckoutStateChangeHandler;
+        OrderManager.OnChange -= OnOrderChangeHandler;
+    }
+
+    private void OnOrderChangeHandler()
+    {
+        if (currentOrder!.OrderId != lastOrderId)
+        {
+            Reset();
+            lastOrderId = currentOrder.OrderId;
+        }
+        StateHasChanged();
+    }
+
+    private void Reset()
+    {
+        formHtmlEn = null;
+        formHtmlUk = null;
+        linkHtmlEn = null;
+        linkHtmlUk = null;
+        currentOrder!.PaymentStatus = PaymentStatus.Wait;
+    }
+
+    private LpCheckoutRequest GetCheckoutRequest(string language)
+    {
+        return new LpCheckoutRequest
+        {
+            Action = LpCheckoutActionPayment.Pay,
+            Amount = Convert.ToDouble(currentOrder!.Amount()),
+            Currency = LpCheckoutCurrency.UAH,
+            Description = "Test",
+            OrderId = currentOrder!.OrderId.ToString(),
+            Language = language == "en" ? "en" : "uk",
+        };
+    }
+
+    private LpCheckoutApiRequest GetCheckoutApiRequest(string language)
+    {
+        return new LpCheckoutApiRequest
+            {
+                Action = LpCheckoutActionPayment.Pay,
+                Amount = Convert.ToDouble(currentOrder!.Amount()),
+                Currency = LpCheckoutCurrency.UAH,
+                Description = "Test",
+                OrderId = currentOrder!.OrderId.ToString(),
+                Language = language == "en" ? "en" : "uk",
+            };
+    }
+
+    #region Client-Server model
+    private async Task GenerateCheckoutButtonForm()
+    {
+        await CardNumberToClipboard();
+
+        var language = CheckoutState.Language;
+        var request = GetCheckoutRequest(language);
+        var html = LiqPayCheckoutClientService.GenerateCheckoutButtonFormHtml(request);
+        if (language == "en")
+            formHtmlEn = html;
+        else
+            formHtmlUk = html;
+
+        var json = AppUtils.ToJson(request);
+        ToConsole($"Generate Checkout Button Form", MsgType.Operation);
+        ToConsole(json, MsgType.Request);
+        ToConsole(html, MsgType.Output);
+        AppUtils.SaveText(json, $"CheckoutButtonForm.Request.{language}.json");
+        AppUtils.SaveText(html, $"CheckoutButtonForm.{language}.html");
+    }
+
+    private async Task GenerateCheckoutHyperlink()
+    {
+        await CardNumberToClipboard();
+
+        var language = CheckoutState.Language;
+        var request = GetCheckoutRequest(language);
+        var html = LiqPayCheckoutClientService.GenerateCheckoutHyperlinkHtml(request);
+        if (language == "en")
+            linkHtmlEn = html;
+        else
+            linkHtmlUk = html;
+
+        var json = AppUtils.ToJson(request);
+        ToConsole($"Generate Checkout Hyperlink", MsgType.Operation);
+        ToConsole(json, MsgType.Request);
+        ToConsole(html, MsgType.Output);
+        AppUtils.SaveText(json, $"CheckoutHyperlink.Request.{language}.json");
+        AppUtils.SaveText(html, $"CheckouHyperlink.{language}.html");
+    }
+
+    #endregion
+
+    #region Server-Server model
+    private async Task GetPaymentState()
+    {
+        var response = await LiqPayService.GetPaymentStateAsync(currentOrder!.OrderId.ToString());
+        var (ok, lpPaymentState) = LiqPayService.Parse<LpPaymentStateBase>(response!);
+        if (ok)
+            await Endpoints.Endpoints.UpdateOrderState(lpPaymentState, OrderManager);
+
+        var reqJson = LiqPayService.ClientGateway.LastJsonRequest;
+        ToConsole($"Get Payment State", MsgType.Operation);
+        ToConsole(reqJson, MsgType.Request);
+        ToConsole(response!, MsgType.Output);
+        AppUtils.SaveText(reqJson, "GetPaymentState.Request.json");
+        AppUtils.SaveText(response!, "GetPaymentState.Response.json");
+    }
+
+    private async Task ServerServerCheckout()
+    {
+        var language = CheckoutState.Language;
+        var request = GetCheckoutApiRequest(language);
+        request.Card = CheckoutState.CardNumber;
+        request.CardExpMonth = "12";
+        request.CardExpYear = "32";
+        request.CardCvv = "123";
+        var response = await LiqPayService.CheckoutApiAsync(request);
+        var (ok, lpPaymentState) = LiqPayService.Parse<LpPaymentStateBase>(response!);
+        if (ok)
+            await Endpoints.Endpoints.UpdateOrderState(lpPaymentState, OrderManager);
+
+        var reqJson = LiqPayService.ClientGateway.LastJsonRequest;
+        ToConsole($"Server-Server Checkout", MsgType.Operation);
+        ToConsole(reqJson, MsgType.Request);
+        ToConsole(response!, MsgType.Response);
+        AppUtils.SaveText(reqJson, $"ServerServerCheckout.Request.{language}.json");
+        AppUtils.SaveText(response!, $"ServerServerCheckout.Response.{language}.json");
+    }
+    #endregion
+
+    private void ToConsole(string message, MsgType msgType)
+    {
+        ConsoleService.ToConsole(message, msgType);
+    }
+
+    private async Task CardNumberToClipboard()
+    {
+        await JSRuntime.InvokeVoidAsync("navigator.clipboard.writeText", CheckoutState.CardNumber);
+    }
+
+    private async void OnCheckoutStateChangeHandler()
+    {
+        await CardNumberToClipboard();
+    }
+
+    private async Task OnClickTab(TabItem target)
+    {
+        CheckoutState.Language = target.Text == "English" ? "en" : "uk";
+        StateHasChanged();
+        await Task.CompletedTask;
+    }
+}

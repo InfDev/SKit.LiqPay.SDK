@@ -1,0 +1,75 @@
+﻿@using BlazorApp.Services
+@using BootstrapBlazor.Components
+@inject OrderManager OrderManager
+
+
+<div class="container my-3">
+    <div class="row">
+        <div class="col">
+            <h3>Order № @currentOrder?.OrderId</h3>
+        </div>
+        <div class="col text-end">
+            <Button Color="Color.Primary" Icon="fa-solid fa-basket-shopping"
+                    Text="New Order" OnClick="NewOrder"></Button>
+        </div>
+    </div>
+</div>
+
+@if (currentOrder != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th class="text-end">Price</th>
+                <th class="text-end">Quantity</th>
+                <th class="text-end">Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (currentOrder != null && currentOrder.Items != null)
+            {
+                foreach (var item in currentOrder.Items)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td class="text-end">@item.Price.ToString()</td>
+                        <td class="text-end">@item.Quantity.ToString()</td>
+                        <td class="text-end">@item.Total().ToString()</td>
+                        <td></td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td colspan="3" class="text-end">In total:</td>
+                <td class="text-end">@currentOrder?.Amount().ToString()</td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    Payment Status: <strong>@currentOrder?.PaymentStatus.Display("en")</strong><br />
+                    LiqPay Payment Status: <strong>@currentOrder?.LiqPayPaymentStatus</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    Order? currentOrder => OrderManager.CurrentOrder;
+
+    protected override async Task OnInitializedAsync()
+    {
+        OrderManager.OnChange += StateHasChanged;
+        await Task.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        OrderManager.OnChange -= StateHasChanged;
+    }
+
+    public async Task NewOrder()
+    {
+        OrderManager.CurrentOrder = await OrderManager.CreateNewOrder();
+    }
+}

@@ -1,0 +1,26 @@
+﻿@using BootstrapBlazor
+@using BootstrapBlazor.Components
+@using BlazorApp.Services
+@inject CheckoutStateService CheckoutState
+
+<div class="d-flex justify-content-center">
+    <Tooltip Placement="Placement.Top" Title="@tooltip" class="w-100">
+        <Select Color="Color.Primary" Items="Items"
+                TValue="string" @bind-Value="CheckoutState.CardNumber"
+                DisplayText="Card for testing" ShowLabel="@ShowLabel" />
+    </Tooltip>
+</div>
+
+@code {
+    [Parameter]
+    public string Language { get; set; } = "uk";
+
+    [Parameter]
+    public bool ShowLabel { get; set; }
+
+    public List<SelectedItem> Items =>
+        CheckoutStateService.Cards.Select(i => new SelectedItem(i.Number, i.DisplayName(Language))).ToList();
+
+    private string tooltip => Language == "uk" ?
+        "Термін дії та CVV2 можуть бути будь-якими" : "Expiration date and CVV2 can be anything";
+}

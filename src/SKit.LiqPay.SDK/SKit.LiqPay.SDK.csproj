@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GenerateDocumentationFile>False</GenerateDocumentationFile>
+
+	<Authors>Alexander Shlyakhto</Authors>
+	<Company>Alexander Shlyakhto - InfDev</Company>
+	<Description>API client SDK library for interaction with the LiqPay payment service</Description>
+	<Version>1.0.0</Version>
+	<License>MIT</License>
+	<PackageProjectUrl>https://github.com/InfDev/SKit.LiqPay.SDK</PackageProjectUrl>
+	<RepositoryUrl>https://api.nuget.org/v3/index.json</RepositoryUrl>
+	<PackageTags>liqpay, pay, payment, masterpass, bank card, privat24, privatbank, netcore, net6, csharp, C#</PackageTags>
+	<Copyright>Copyright (C) Alexander Shlyakhto - InfDev</Copyright>
+	<IncludeSymbols>true</IncludeSymbols>
+	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
+  </ItemGroup>
+
+</Project>

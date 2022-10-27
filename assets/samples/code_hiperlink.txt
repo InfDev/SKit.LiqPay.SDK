@@ -1,0 +1,1 @@
+https://www.liqpay.ua/api/3/checkout?data=eyJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXkiLCJhbW91bnQiOjUsImN1cnJlbmN5IjoiVUFIIiwiZGVzY3JpcHRpb24iOiLQnNGW0Lkg0YLQvtCy0LDRgCIsInB1YmxpY19rZXkiOiJzYW5kYm94X2kyMTYwMjc1NjkxNyIsImxhbmd1YWdlIjoicnUifQ==&signature=sjTiz7LhG7XgLvmEGkG/rOME/Og=

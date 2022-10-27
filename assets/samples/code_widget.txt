@@ -1,0 +1,20 @@
+<div id="liqpay_checkout"></div>
+<script>
+  window.LiqPayCheckoutCallback = function() {
+    LiqPayCheckout.init({
+      data: "eyJ2ZXJzaW9uIjozLCJhY3Rpb24iOiJwYXkiLCJhbW91bnQiOjUsImN1cnJlbmN5IjoiVUFIIiwiZGVzY3JpcHRpb24iOiLQnNGW0Lkg0YLQvtCy0LDRgCIsInB1YmxpY19rZXkiOiJzYW5kYm94X2kyMTYwMjc1NjkxNyIsImxhbmd1YWdlIjoicnUifQ==",
+      signature: "sjTiz7LhG7XgLvmEGkG/rOME/Og=",
+      embedTo: "#liqpay_checkout",
+      mode: "embed" // embed || popup,
+        }).on("liqpay.callback", function(data){
+      console.log(data.status);
+      console.log(data);
+      }).on("liqpay.ready", function(data){
+        // ready
+      }).on("liqpay.close", function(data){
+        // close
+    });
+  };
+</script>
+<script src="//static.liqpay.ua/libjs/checkout.js" async></script>
+    

@@ -1,0 +1,70 @@
+﻿@using BlazorApp.Services
+@using BootstrapBlazor.Components
+@inject OrderManager OrderManager
+
+
+<div class="container my-3">
+    <div class="row">
+        <div class="col">
+            <h3>Замовлення № @currentOrder?.OrderId</h3>
+        </div>
+        <div class="col text-end">
+            <Button Color="Color.Primary" Icon="fa-solid fa-basket-shopping"
+                    Text="Нове замовлення" OnClick="NewOrder"></Button>
+        </div>
+    </div>
+</div>
+
+@if (currentOrder != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Найменування продукту</th>
+                <th class="text-end">Ціна</th>
+                <th class="text-end">Кіл-сть</th>
+                <th class="text-end">Вартість</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if (currentOrder != null && currentOrder.Items != null)
+            {
+                foreach (var item in currentOrder.Items)
+                {
+                    <tr>
+                        <td>@item.Name</td>
+                        <td class="text-end">@item.Price.ToString()</td>
+                        <td class="text-end">@item.Quantity.ToString()</td>
+                        <td class="text-end">@item.Total().ToString()</td>
+                        <td></td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td colspan="3" class="text-end">In total:</td>
+                <td class="text-end">@currentOrder?.Amount().ToString()</td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    Стан оплати: <strong>@currentOrder?.PaymentStatus.Display("uk")</strong><br />
+                    LiqPay стан оплати: <strong>@currentOrder?.LiqPayPaymentStatus</strong>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+@code {
+    Order? currentOrder => OrderManager.CurrentOrder;
+
+    protected override async Task OnInitializedAsync()
+    {
+        OrderManager.OnChange += StateHasChanged;
+        await Task.CompletedTask;
+    }
+
+    public async Task NewOrder()
+    {
+        OrderManager.CurrentOrder = await OrderManager.CreateNewOrder();
+    }
+}

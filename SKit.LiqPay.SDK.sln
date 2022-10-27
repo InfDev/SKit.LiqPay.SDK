@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SKit.LiqPay.SDK", "src\SKit.LiqPay.SDK\SKit.LiqPay.SDK.csproj", "{E091B669-F366-4166-8221-013CC819D7B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SKit.LiqPay.SDK.Tests", "tests\SKit.LiqPay.SDK.Tests\SKit.LiqPay.SDK.Tests.csproj", "{4BA9F2AB-01EB-4A20-B4DB-3AB197BC0AF5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{CF93F85D-70CB-4B74-AA90-A48C175FC189}"
+	ProjectSection(SolutionItems) = preProject
+		assets\articles\blazor-app.md = assets\articles\blazor-app.md
+		assets\articles\ipn-pdt.md = assets\articles\ipn-pdt.md
+		README.md = README.md
+		README.ru.md = README.ru.md
+		README.uk.md = README.uk.md
+		todo.txt = todo.txt
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp", "examples\BlazorApp\BlazorApp.csproj", "{355202F9-1FCB-45B4-9C56-AC53DC3929AA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp.Tests", "tests\BlazorApp.Tests\BlazorApp.Tests.csproj", "{C7D72F92-3FC5-48E7-95A7-077F113C5CA8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6B8932F2-AB17-4133-920A-CDEB2AFAFA29}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "examples\ConsoleApp\ConsoleApp.csproj", "{70E3A673-5611-4FD9-8764-D3C7D708D0F6}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E091B669-F366-4166-8221-013CC819D7B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E091B669-F366-4166-8221-013CC819D7B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E091B669-F366-4166-8221-013CC819D7B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E091B669-F366-4166-8221-013CC819D7B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4BA9F2AB-01EB-4A20-B4DB-3AB197BC0AF5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4BA9F2AB-01EB-4A20-B4DB-3AB197BC0AF5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4BA9F2AB-01EB-4A20-B4DB-3AB197BC0AF5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4BA9F2AB-01EB-4A20-B4DB-3AB197BC0AF5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{355202F9-1FCB-45B4-9C56-AC53DC3929AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{355202F9-1FCB-45B4-9C56-AC53DC3929AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{355202F9-1FCB-45B4-9C56-AC53DC3929AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{355202F9-1FCB-45B4-9C56-AC53DC3929AA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7D72F92-3FC5-48E7-95A7-077F113C5CA8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7D72F92-3FC5-48E7-95A7-077F113C5CA8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7D72F92-3FC5-48E7-95A7-077F113C5CA8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7D72F92-3FC5-48E7-95A7-077F113C5CA8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70E3A673-5611-4FD9-8764-D3C7D708D0F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70E3A673-5611-4FD9-8764-D3C7D708D0F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70E3A673-5611-4FD9-8764-D3C7D708D0F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70E3A673-5611-4FD9-8764-D3C7D708D0F6}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{4BA9F2AB-01EB-4A20-B4DB-3AB197BC0AF5} = {6B8932F2-AB17-4133-920A-CDEB2AFAFA29}
+		{C7D72F92-3FC5-48E7-95A7-077F113C5CA8} = {6B8932F2-AB17-4133-920A-CDEB2AFAFA29}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {912721B9-3E12-405F-9815-11A81D7EF193}
+	EndGlobalSection
+EndGlobal
