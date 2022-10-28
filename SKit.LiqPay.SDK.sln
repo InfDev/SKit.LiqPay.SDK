@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SKit.LiqPay.SDK.Tests", "te
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{CF93F85D-70CB-4B74-AA90-A48C175FC189}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		assets\articles\blazor-app.md = assets\articles\blazor-app.md
 		assets\articles\ipn-pdt.md = assets\articles\ipn-pdt.md
 		README.md = README.md
@@ -23,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorApp.Tests", "tests\Bl
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{6B8932F2-AB17-4133-920A-CDEB2AFAFA29}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "examples\ConsoleApp\ConsoleApp.csproj", "{70E3A673-5611-4FD9-8764-D3C7D708D0F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "examples\ConsoleApp\ConsoleApp.csproj", "{70E3A673-5611-4FD9-8764-D3C7D708D0F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

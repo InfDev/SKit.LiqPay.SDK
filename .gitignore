@@ -1,5 +1,6 @@
 .useful/**/~*.*
 *.db
+ToArc.cmd
 
 # Folders
 artifacts/
