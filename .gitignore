@@ -1,6 +1,7 @@
 .useful/**/~*.*
 *.db
 ./ToArc.cmd
+.github
 
 # Folders
 artifacts/
