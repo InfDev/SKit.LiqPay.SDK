@@ -1,17 +1,20 @@
 # https://docs.github.com/en/actions/using-workflows
 # https://www.jamescroft.co.uk/how-to-build-publish-nuget-packages-with-github-actions/
-name: .NET CI/CD
+name: .NET CI/CD + pub nupkg
 
 on: 
-  push:
-    branches:
-    - main
-#  pull_request:
+#  push:
 #    branches:
 #    - main
-#   create:
-#     branches: 
-#     - release/**
+##  pull_request:
+##    branches:
+##    - main
+##   create:
+##     branches: 
+@#     - release/**
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
 env:
   DOTNET_VERSION: '6.x.x'
@@ -35,7 +38,7 @@ jobs:
     - name: Setup a .NET CLI environment for use in actions
       uses: actions/setup-dotnet@v2
       with:
-        dotnet-version: {{DOTNET_VERSION}}
+        dotnet-version: '6.x.x'
     
     - name: Install NuGet client
       uses: nuget/setup-nuget@v1
@@ -47,7 +50,7 @@ jobs:
       run: nuget restore SKit.LiqPay.SDK.sln
       
     - name: Build solution
-      run: dotnet build SKit.LiqPay.SDK.sln --configuration {{BUILD_CONFIGURATION}} --no-restore
+      run: dotnet build SKit.LiqPay.SDK.sln --configuration 'Release' --no-restore
       
     - name: Run tests  
       run: dotnet test test/SKit.LiqPay.SDK.Tests/SKit.LiqPay.SDK.Tests.csproj /p:Configuration=$env:BUILD_CONFIGURATION --no-restore --no-build --verbosity normal
