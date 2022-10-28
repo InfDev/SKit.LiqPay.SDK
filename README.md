@@ -2,6 +2,8 @@
 
 [![SDK](./assets/images/liqpay-sdk.png)](doc/uk/blazor-app.md)
 
+[NuGet package](https://www.nuget.org/packages/SKit.LiqPay.SDK)
+
 ## Documentation
 
 [English](doc/en/index.md) | [Українська](doc/uk/index.md) | [Русский](doc/ru/index.md)

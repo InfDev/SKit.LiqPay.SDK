@@ -17,7 +17,7 @@
 	<Copyright>Copyright (C) Alexander Shlyakhto - InfDev</Copyright>
 	<IncludeSymbols>true</IncludeSymbols>
 	<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 
   </PropertyGroup>
 
