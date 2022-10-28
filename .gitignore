@@ -1,6 +1,6 @@
 .useful/**/~*.*
 *.db
-ToArc.cmd
+./ToArc.cmd
 
 # Folders
 artifacts/
